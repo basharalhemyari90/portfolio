@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بشار الحميري | مصور فوتوغرافي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #080808;
+    --dark: #111111;
+    --card: #181818;
+    --gold: #C9A84C;
+    --gold-light: #E2C06A;
+    --white: #FFFFFF;
+    --gray: #AAAAAA;
+    --light: #E8E8E8;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Cairo', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+
+  /* LOADER */
+  #loader { position: fixed; inset: 0; background: var(--black); display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.6s ease; }
+  .loader-ring { width: 80px; height: 80px; border: 2px solid transparent; border-top-color: var(--gold); border-right-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; position: relative; }
+  .loader-ring::after { content: ''; position: absolute; inset: 8px; border: 2px solid transparent; border-bottom-color: var(--gold-light); border-left-color: var(--gold-light); border-radius: 50%; animation: spin 0.7s linear infinite reverse; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* NAV */
+  nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 18px 5%; display: flex; align-items: center; justify-content: space-between; transition: background 0.3s, backdrop-filter 0.3s; }
+  nav.scrolled { background: rgba(8,8,8,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .nav-logo { font-size: 1.4rem; font-weight: 900; color: var(--white); }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 30px; list-style: none; }
+  .nav-links a { color: var(--gray); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; right: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta { background: var(--gold); color: var(--black); padding: 10px 22px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.3s, transform 0.2s; }
+  .nav-cta:hover { background: var(--gold-light); transform: scale(1.03); }
+
+  /* HERO */
+  #home { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 120px 5% 60px; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 50%, rgba(201,168,76,0.06) 0%, transparent 65%); }
+  .hero-bg::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; }
+  .hero-content { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 80px; max-width: 1200px; width: 100%; position: relative; z-index: 2; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; color: var(--gold); font-weight: 600; margin-bottom: 24px; animation: fadeUp 0.8s ease forwards; }
+  .hero-badge::before { content: '●'; font-size: 0.5rem; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .hero-title { font-size: clamp(2.5rem, 4.5vw, 4rem); font-weight: 900; line-height: 1.2; margin-bottom: 18px; animation: fadeUp 0.8s ease 0.1s both; }
+  .hero-title .name { color: var(--gold); display: block; }
+  .hero-subtitle { font-size: 1rem; color: var(--gray); line-height: 1.9; margin-bottom: 36px; animation: fadeUp 0.8s ease 0.2s both; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; animation: fadeUp 0.8s ease 0.3s both; }
+  .btn-primary { background: var(--gold); color: var(--black); padding: 13px 28px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s, box-shadow 0.3s; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.3); }
+  .btn-outline { border: 1px solid rgba(201,168,76,0.5); color: var(--gold); padding: 13px 28px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s; }
+  .btn-outline:hover { background: rgba(201,168,76,0.08); transform: translateY(-2px); }
+
+  /* APERTURE */
+  .hero-visual { display: flex; align-items: center; justify-content: center; }
+  .aperture-wrap { position: relative; width: 360px; height: 360px; animation: fadeUp 0.8s ease 0.2s both; }
+  .aperture-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(201,168,76,0.2); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: rotateSlow linear infinite; }
+  .aperture-ring:nth-child(1) { width: 360px; height: 360px; animation-duration: 30s; border-style: dashed; }
+  .aperture-ring:nth-child(2) { width: 290px; height: 290px; animation-duration: 20s; animation-direction: reverse; border-color: rgba(201,168,76,0.12); }
+  .aperture-ring:nth-child(3) { width: 225px; height: 225px; animation-duration: 25s; border-color: rgba(201,168,76,0.08); }
+  @keyframes rotateSlow { to { transform: translate(-50%,-50%) rotate(360deg); } }
+  .photo-frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 190px; height: 190px; border-radius: 50%; overflow: hidden; border: 3px solid var(--gold); box-shadow: 0 0 40px rgba(201,168,76,0.25), 0 0 80px rgba(201,168,76,0.1); }
+  .photo-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+  .stat-bubble { position: absolute; background: rgba(20,20,20,0.92); border: 1px solid rgba(201,168,76,0.2); padding: 12px 18px; border-radius: 12px; backdrop-filter: blur(10px); text-align: center; white-space: nowrap; }
+  .stat-bubble .num { font-size: 1.4rem; font-weight: 900; color: var(--gold); line-height: 1; }
+  .stat-bubble .lbl { font-size: 0.7rem; color: var(--gray); font-weight: 600; }
+  .stat-bubble:nth-of-type(1) { top: 8%; right: -5px; animation: float 4s ease-in-out infinite; }
+  .stat-bubble:nth-of-type(2) { bottom: 8%; left: -5px; animation: float 4s ease-in-out infinite 2s; }
+  @keyframes float { 0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)} }
+
+  /* ABOUT */
+  #about { padding: 100px 5%; background: var(--dark); }
+  .section-label { display: flex; align-items: center; gap: 12px; font-size: 0.75rem; font-weight: 700; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+  .section-label::before { content: ''; width: 28px; height: 1px; background: var(--gold); flex-shrink: 0; }
+  .section-title { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; margin-bottom: 18px; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; max-width: 1100px; margin: 0 auto; }
+  .about-photo { position: relative; }
+  .about-photo img { width: 100%; border-radius: 16px; display: block; }
+  .about-photo::before { content: ''; position: absolute; inset: -3px; border-radius: 18px; background: linear-gradient(135deg, var(--gold), transparent 60%); z-index: -1; }
+  .exp-badge { position: absolute; bottom: -20px; left: -20px; background: var(--gold); color: var(--black); width: 88px; height: 88px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; }
+  .exp-badge .num { font-size: 1.7rem; line-height: 1; }
+  .exp-badge .lbl { font-size: 0.6rem; font-weight: 700; }
+  .about-desc { color: var(--gray); line-height: 2; font-size: 0.97rem; margin-bottom: 32px; }
+  .skills-list { display: flex; flex-wrap: wrap; gap: 10px; }
+  .skill-tag { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); color: var(--light); padding: 8px 16px; border-radius: 20px; font-size: 0.83rem; font-weight: 600; transition: background 0.3s, border-color 0.3s; }
+  .skill-tag:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); }
+
+  /* PORTFOLIO */
+  #portfolio { padding: 100px 5%; max-width: 1300px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-header .section-label { justify-content: center; }
+  .section-header .section-label::before { display: none; }
+
+  /* Filter tabs */
+  .filter-tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 40px; }
+  .filter-btn { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: var(--gray); padding: 9px 20px; border-radius: 25px; font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+  .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--black); }
+
+  /* Masonry grid */
+  .gallery-grid { columns: 3; column-gap: 14px; }
+  .gallery-item { break-inside: avoid; margin-bottom: 14px; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer; display: block; }
+  .gallery-item img { width: 100%; display: block; transition: transform 0.4s ease; }
+  .gallery-item:hover img { transform: scale(1.04); }
+  .gallery-item .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 16px; }
+  .gallery-item:hover .overlay { opacity: 1; }
+  .overlay-cat { font-size: 0.75rem; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+  .gallery-item.hidden { display: none; }
+
+  /* Lightbox */
+  #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9000; display: none; align-items: center; justify-content: center; padding: 20px; }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; }
+  #lightbox-close { position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.1); border: none; color: white; width: 44px; height: 44px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+  #lightbox-close:hover { background: rgba(255,255,255,0.2); }
+  #lb-prev, #lb-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.08); border: none; color: white; width: 50px; height: 50px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+  #lb-prev { right: 20px; }
+  #lb-next { left: 20px; }
+  #lb-prev:hover, #lb-next:hover { background: rgba(201,168,76,0.3); }
+
+  /* CONTACT */
+  #contact { padding: 100px 5%; background: var(--dark); }
+  .contact-inner { max-width: 750px; margin: 0 auto; text-align: center; }
+  .contact-inner .section-label { justify-content: center; }
+  .contact-inner .section-label::before { display: none; }
+  .contact-sub { color: var(--gray); font-size: 1rem; margin-bottom: 48px; line-height: 1.8; margin-top: 12px; }
+  .contact-cards { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+  .contact-card { background: var(--card); border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 28px 36px; text-decoration: none; color: var(--white); display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 180px; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+  .contact-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 20px 50px rgba(201,168,76,0.12); }
+  .contact-card .icon { font-size: 2rem; }
+  .contact-card .c-label { font-size: 0.72rem; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .contact-card .c-value { font-size: 0.95rem; font-weight: 700; }
+
+  footer { padding: 28px 5%; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; color: var(--gray); font-size: 0.8rem; }
+  footer span { color: var(--gold); }
+
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .hero-visual { order: -1; }
+    .aperture-wrap { width: 260px; height: 260px; }
+    .aperture-ring:nth-child(1) { width: 260px; height: 260px; }
+    .aperture-ring:nth-child(2) { width: 210px; height: 210px; }
+    .aperture-ring:nth-child(3) { width: 160px; height: 160px; }
+    .photo-frame { width: 140px; height: 140px; }
+    .stat-bubble:nth-of-type(1) { top: 2%; right: 10%; }
+    .stat-bubble:nth-of-type(2) { bottom: 2%; left: 10%; }
+    .hero-actions { justify-content: center; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-photo { max-width: 320px; margin: 0 auto 30px; }
+    .gallery-grid { columns: 2; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 500px) {
+    .gallery-grid { columns: 1; }
+    .filter-tabs { gap: 8px; }
+    .filter-btn { font-size: 0.78rem; padding: 7px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-ring"></div></div>
+
+<nav id="navbar">
+  <div class="nav-logo">بشار <span>الحميري</span></div>
+  <ul class="nav-links">
+    <li><a href="#home">الرئيسية</a></li>
+    <li><a href="#about">من أنا</a></li>
+    <li><a href="#portfolio">أعمالي</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+  <a href="https://wa.me/966553066316" target="_blank" class="nav-cta">تواصل معي</a>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">📸 مصور فوتوغرافي محترف</div>
+      <h1 class="hero-title">أهلاً، أنا<span class="name">بشار الحميري</span></h1>
+      <p class="hero-subtitle">أوثّق اللحظات وأحوّلها إلى ذكريات لا تُنسى.<br>خبرة 5 سنوات في التصوير الفوتوغرافي الاحترافي.</p>
+      <div class="hero-actions">
+        <a href="#portfolio" class="btn-primary">🎞️ شاهد أعمالي</a>
+        <a href="https://wa.me/966553066316" target="_blank" class="btn-outline">💬 تواصل معي</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="aperture-wrap">
+        <div class="aperture-ring"></div>
+        <div class="aperture-ring"></div>
+        <div class="aperture-ring"></div>
+        <div class="photo-frame">
+          <img src="profile.jpg" alt="بشار الحميري">
+        </div>
+        <div class="stat-bubble"><div class="num">5+</div><div class="lbl">سنوات خبرة</div></div>
+        <div class="stat-bubble"><div class="num">100%</div><div class="lbl">رضا العملاء</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid reveal">
+    <div class="about-photo">
+      <img src="profile.jpg" alt="بشار الحميري">
+      <div class="exp-badge"><span class="num">5</span><span class="lbl">سنوات</span></div>
+    </div>
+    <div class="about-text">
+      <div class="section-label">من أنا</div>
+      <h2 class="section-title">مصور فوتوغرافي<br>متخصص واحترافي</h2>
+      <p class="about-desc">أنا بشار الحميري، مصور فوتوغرافي شغوف بالتقاط التفاصيل التي يغفل عنها الآخرون. خلال مسيرتي التي امتدت لأكثر من 5 سنوات، عملت على تنوع واسع من المشاريع التصويرية التي تجمع بين الإبداع والاحترافية.</p>
+      <div class="skills-list">
+        <span class="skill-tag">📷 تصوير بورترية</span>
+        <span class="skill-tag">🍔 تصوير الأطعمة</span>
+        <span class="skill-tag">🎉 زواجات ومناسبات</span>
+        <span class="skill-tag">🏛️ معارض ومؤتمرات</span>
+        <span class="skill-tag">⚽ تصوير رياضي</span>
+        <span class="skill-tag">✨ لايف ستايل</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="section-header reveal">
+    <div class="section-label">معرض الأعمال</div>
+    <h2 class="section-title">أعمالي الفوتوغرافية</h2>
+  </div>
+
+  <div class="filter-tabs reveal">
+    <button class="filter-btn active" data-filter="all">الكل</button>
+    <button class="filter-btn" data-filter="food-white">أطعمة خلفية بيضاء</button>
+    <button class="filter-btn" data-filter="food-life">لايف ستايل</button>
+    <button class="filter-btn" data-filter="events">معارض ومؤتمرات</button>
+    <button class="filter-btn" data-filter="wedding">زواجات ومناسبات</button>
+    <button class="filter-btn" data-filter="sports">رياضي</button>
+    <button class="filter-btn" data-filter="portrait">بورترية</button>
+  </div>
+
+  <div class="gallery-grid" id="gallery">
+    <!-- Food white background: photos 1-12 (sorted by size, these are ~photo_1 to photo_12 area) -->
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_1.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_2.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_3.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_4.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_5.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_6.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_7.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_8.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_9.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_10.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_11.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <div class="gallery-item" data-cat="food-white"><img src="imgs/photo_12.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">أطعمة</span></div></div>
+    <!-- Food lifestyle: photos 13-24 -->
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_13.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_14.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_15.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_16.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_17.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_18.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_19.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_20.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_21.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_22.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_23.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <div class="gallery-item" data-cat="food-life"><img src="imgs/photo_24.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">لايف ستايل</span></div></div>
+    <!-- Events: photos 25-38 -->
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_25.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_26.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_27.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_28.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_29.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_30.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_31.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_32.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_33.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_34.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_35.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_36.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_37.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <div class="gallery-item" data-cat="events"><img src="imgs/photo_38.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">معارض</span></div></div>
+    <!-- Weddings: photos 39-50 -->
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_39.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_40.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_41.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_42.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_43.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_44.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_45.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_46.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_47.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <div class="gallery-item" data-cat="wedding"><img src="imgs/photo_48.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">مناسبات</span></div></div>
+    <!-- Sports: photos 51-54 -->
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_51.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_52.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_53.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_54.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_55.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_56.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_57.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <div class="gallery-item" data-cat="sports"><img src="imgs/photo_58.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">رياضي</span></div></div>
+    <!-- Portrait: photos 58-59 -->
+    <div class="gallery-item" data-cat="portrait"><img src="imgs/photo_59.jpg" alt="" loading="lazy"><div class="overlay"><span class="overlay-cat">بورترية</span></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label">تواصل معي</div>
+    <h2 class="section-title reveal">هل لديك مشروع؟<br>لنتحدث!</h2>
+    <p class="contact-sub reveal">أنا دائماً منفتح على المشاريع الجديدة.<br>تواصل معي وسأرد في أقرب وقت.</p>
+    <div class="contact-cards reveal">
+      <a href="https://wa.me/966553066316" target="_blank" class="contact-card">
+        <span class="icon">💬</span>
+        <span class="c-label">واتساب</span>
+        <span class="c-value">0553066316</span>
+      </a>
+      <a href="https://www.instagram.com/2br_y" target="_blank" class="contact-card">
+        <span class="icon">📸</span>
+        <span class="c-label">إنستقرام</span>
+        <span class="c-value">2br_y@</span>
+      </a>
+      <a href="tel:0553066316" class="contact-card">
+        <span class="icon">📞</span>
+        <span class="c-label">اتصل بي</span>
+        <span class="c-value">0553066316</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>بشار الحميري</span> — جميع الحقوق محفوظة</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lightbox-close">✕</button>
+  <button id="lb-prev">‹</button>
+  <img id="lb-img" src="" alt="">
+  <button id="lb-next">›</button>
+</div>
+
+<script>
+  // Loader
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const l = document.getElementById('loader');
+      l.style.opacity = '0';
+      setTimeout(() => l.style.display = 'none', 600);
+    }, 700);
+  });
+
+  // Nav scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 50));
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Filter
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      galleryItems.forEach(item => {
+        item.classList.toggle('hidden', filter !== 'all' && item.dataset.cat !== filter);
+      });
+    });
+  });
+
+  // Lightbox
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  let visibleItems = [], lbIndex = 0;
+
+  function getVisible() {
+    return [...document.querySelectorAll('.gallery-item:not(.hidden)')];
+  }
+
+  galleryItems.forEach(item => {
+    item.addEventListener('click', () => {
+      visibleItems = getVisible();
+      lbIndex = visibleItems.indexOf(item);
+      lbImg.src = item.querySelector('img').src;
+      lb.classList.add('open');
+    });
+  });
+
+  document.getElementById('lightbox-close').addEventListener('click', () => lb.classList.remove('open'));
+  lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
+
+  document.getElementById('lb-next').addEventListener('click', () => {
+    visibleItems = getVisible();
+    lbIndex = (lbIndex - 1 + visibleItems.length) % visibleItems.length;
+    lbImg.src = visibleItems[lbIndex].querySelector('img').src;
+  });
+  document.getElementById('lb-prev').addEventListener('click', () => {
+    visibleItems = getVisible();
+    lbIndex = (lbIndex + 1) % visibleItems.length;
+    lbImg.src = visibleItems[lbIndex].querySelector('img').src;
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') lb.classList.remove('open');
+    if (e.key === 'ArrowLeft') document.getElementById('lb-prev').click();
+    if (e.key === 'ArrowRight') document.getElementById('lb-next').click();
+  });
+</script>
+</body>
+</html>
